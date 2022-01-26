@@ -1,23 +1,25 @@
 package application;
 
-import adapter.Reporter;
+import port.ResultHandler;
+import port.QueryProcessor;
 
-public class App {
-    private final Reporter reporter;
+public class App implements QueryProcessor {
+    public static final String PARSE_ERROR_MESSAGE = "Cannot parse expression";
+    private final ResultHandler resultHandler;
 
-    public App(Reporter reporter) {
-        this.reporter = reporter;
+    public App(ResultHandler resultHandler) {
+        this.resultHandler = resultHandler;
     }
 
     public void processQuery(String input) {
         String[] parts = input.split("\\+");
         if (parts.length != 2) {
-            reporter.reportError("Cannot parse expression");
+            resultHandler.reportError(PARSE_ERROR_MESSAGE);
         } else {
             int a = Integer.parseInt(parts[0].trim());
             int b = Integer.parseInt(parts[1].trim());
             int result = a + b;
-            reporter.reportResult(result);
+            resultHandler.reportResult(result);
         }
     }
 }

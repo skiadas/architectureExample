@@ -1,16 +1,16 @@
 package adapter;
 
-import application.App;
+import port.QueryProcessor;
 
 import java.io.InputStream;
 import java.util.Scanner;
 
 public class Server {
-    private final App app;
-    private InputStream inputStream;
+    private final QueryProcessor queryProcessor;
+    private final InputStream inputStream;
 
-    public Server(InputStream inputStream, App app) {
-        this.app = app;
+    public Server(InputStream inputStream, QueryProcessor queryProcessor) {
+        this.queryProcessor = queryProcessor;
         this.inputStream = inputStream;
     }
 
@@ -18,7 +18,7 @@ public class Server {
         Scanner scanner = new Scanner(inputStream);
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
-            app.processQuery(input);
+            queryProcessor.processQuery(input);
         }
     }
 }

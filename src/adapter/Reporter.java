@@ -1,9 +1,11 @@
 package adapter;
 
+import port.ResultHandler;
+
 import java.io.PrintStream;
 
-public class Reporter {
-    private PrintStream outputStream;
+public class Reporter implements ResultHandler {
+    private final PrintStream outputStream;
 
     public Reporter(PrintStream outputStream) {
         this.outputStream = outputStream;
