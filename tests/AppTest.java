@@ -1,4 +1,5 @@
 import application.App;
+import domain.parsing.ExpressionParser;
 import org.junit.Before;
 import org.junit.Test;
 import port.ResultHandler;
@@ -32,7 +33,7 @@ public class AppTest {
     @Test
     public void testAdditionInvalidInput() {
         app.processQuery("23");
-        verify(resultHandler).reportError(App.PARSE_ERROR_MESSAGE);
+        verify(resultHandler).reportError(ExpressionParser.PARSE_ERROR_MESSAGE);
         verify(resultHandler, never()).reportResult(anyInt());
     }
 }

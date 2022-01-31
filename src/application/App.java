@@ -1,25 +1,23 @@
 package application;
 
-import port.ResultHandler;
+import domain.DomainFacade;
+import domain.expression.Expression;
+import domain.parsing.ParseResult;
 import port.QueryProcessor;
+import port.ResultHandler;
 
 public class App implements QueryProcessor {
-    public static final String PARSE_ERROR_MESSAGE = "Cannot parse expression";
     private final ResultHandler resultHandler;
+    private final DomainFacade domain = new DomainFacade();
 
     public App(ResultHandler resultHandler) {
         this.resultHandler = resultHandler;
     }
 
     public void processQuery(String input) {
-        String[] parts = input.split("\\+");
-        if (parts.length != 2) {
-            resultHandler.reportError(PARSE_ERROR_MESSAGE);
-        } else {
-            int a = Integer.parseInt(parts[0].trim());
-            int b = Integer.parseInt(parts[1].trim());
-            int result = a + b;
-            resultHandler.reportResult(result);
-        }
+        ParseResult parseResult = domain.parse(input);
+        parseResult.handle(
+                (Expression expr) -> resultHandler.reportResult(domain.evaluate(expr)),
+                (String error) -> resultHandler.reportError(error));
     }
 }
