@@ -4,11 +4,44 @@ import org.junit.Before;
 import org.junit.Test;
 import port.ResultHandler;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import static org.mockito.Mockito.*;
 
 public class AppTest {
     private ResultHandler resultHandler;
     private App app;
+
+    public static void main(String[] args) {
+        // Writing our own test suite?
+        Method[] methods = AppTest.class.getDeclaredMethods();
+        // Find setup method
+        Method setupMethod = null;
+        for (Method method : methods) {
+            if (method.isAnnotationPresent(Before.class)) {
+                setupMethod = method;
+            }
+        }
+        // Now we run each test
+        for (Method method : methods) {
+            if (method.isAnnotationPresent(Test.class)) {
+                // Each test needs its own object
+                AppTest testObject = new AppTest();
+                try {
+                    if (setupMethod != null) {
+                        setupMethod.invoke(testObject);
+                    }
+                    method.invoke(testObject);
+                    System.out.println("TEST OK! " + method.getName());
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    System.out.println("TEST FAILED! " + method.getName());
+                }
+            }
+        }
+    }
 
     @Before
     public void setUp() {
